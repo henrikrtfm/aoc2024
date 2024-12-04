@@ -1,0 +1,60 @@
+def parse_grid_to_dict(grid):
+    grid_dict = {}
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            grid_dict[(row, col)] = grid[row][col]
+    return grid_dict
+
+
+def get_neighbors(coord, grid_dict, length):
+    row, col = coord
+    directions = {
+        "right": [(row, col + i) for i in range(length)],
+        "left": [(row, col - i) for i in range(length)],
+        "down": [(row + i, col) for i in range(length)],
+        "up": [(row - i, col) for i in range(length)],
+        "diag-right-down": [(row + i, col + i) for i in range(length)],
+        "diag-left-up": [(row - i, col - i) for i in range(length)],
+        "diag-right-up": [(row - i, col + i) for i in range(length)],
+        "diag-left-down": [(row + i, col - i) for i in range(length)],
+    }
+    valid_neighbors = {}
+    for direction, cells in directions.items():
+        if all(cell in grid_dict for cell in cells):  # Ensure all cells exist
+            valid_neighbors[direction] = cells
+    return valid_neighbors
+
+
+def find_patterns(grid, patterns):
+    grid_dict = parse_grid_to_dict(grid)
+    found_patterns = set()
+    pattern_length = max(len(p) for p in patterns)
+
+    for coord in grid_dict:
+        neighbors = get_neighbors(coord, grid_dict, pattern_length)
+        for direction, cells in neighbors.items():
+            # Construct the string from the neighbor cells
+            string = "".join(grid_dict[cell] for cell in cells)
+            if string in patterns:
+                # Store the coordinates of the match as a frozenset to avoid duplicates
+                found_patterns.add(frozenset(cells))
+
+    return found_patterns
+
+
+# Example grid
+grid = [
+    list("MMMSXXMASM"),
+    list("MSAMXMSMSA"),
+    list("AMXSXMAAMM"),
+    list("MSAMASMSMX"),
+    list("XMASAMXAMM"),
+    list("XXAMMXXAMA"),
+    list("SMSMSASXSS"),
+    list("SAXAMASAAA"),
+    list("MAMMMXMMMM"),
+    list("MXMXAXMASX")
+]
+
+patterns = {"XMAS", "SAMX"}
+result = find_patterns(grid, patterns)
