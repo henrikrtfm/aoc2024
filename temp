@@ -58,3 +58,6 @@ grid = [
 
 patterns = {"XMAS", "SAMX"}
 result = find_patterns(grid, patterns)
+
+
+(6,3), (7,6), (7,7), (8,1), (8,3), (9,7)
