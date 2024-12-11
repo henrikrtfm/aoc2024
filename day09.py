@@ -50,12 +50,11 @@ def find_free_space_block(disk, size):
 
 
 def compact_disc_blocks(disk):
-    """Compact the disk by moving entire file blocks if possible."""
     compacted = disk[:]
-    idx = len(compacted) - 1  # Start from the end of the disk
+    idx = len(compacted) - 1
 
     while idx >= 0:
-        if compacted[idx] == '.':  # Skip free space
+        if compacted[idx] == '.':
             idx -= 1
             continue
 
@@ -63,21 +62,18 @@ def compact_disc_blocks(disk):
         block_end = idx
         block_size = 0
 
-        # Find the start and size of the file block
         while block_end >= 0 and compacted[block_end] == file_id:
             block_size += 1
             block_end -= 1
         block_start = block_end + 1
 
-        # Find a suitable free space block
+
         free_start, free_size = find_free_space_block(compacted, block_size)
         if free_start is not None and free_start < block_start:
-            # Move the entire file block
             compacted[free_start:free_start + block_size] = [file_id] * block_size
             compacted[block_start:block_start + block_size] = ['.'] * block_size
 
-        # Update the index to skip over the processed block
-        idx = block_end  # Move to the next unprocessed block
+        idx = block_end
 
     return compacted
 
