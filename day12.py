@@ -63,35 +63,35 @@ def get_area_and_corners(region):
     up = set()
     down = set()
 
-    for (r, c) in region:
-        if (r - 1, c) not in region:
-            up.add((r, c))
-        if (r + 1, c) not in region:
-            down.add((r, c))
-        if (r, c + 1) not in region:
-            right.add((r, c))
-        if (r, c - 1) not in region:
-            left.add((r, c))
+    for (row, col) in region:
+        if (row - 1, col) not in region:
+            up.add((row, col))
+        if (row + 1, col) not in region:
+            down.add((row, col))
+        if (row, col + 1) not in region:
+            right.add((row, col))
+        if (row, col - 1) not in region:
+            left.add((row, col))
 
     corners = 0
 
-    for (r, c) in region:
-        match (r, c):
-            case (r, c) if (r, c) in up and (r, c) in left:
+    for (row, col) in region:
+        match (row, col):
+            case (row, col) if (row, col) in up and (row, col) in left:
                 corners += 1
-            case (r, c) if (r, c) in up and (r, c) in right:
+            case (row, col) if (row, col) in up and (row, col) in right:
                 corners += 1
-            case (r, c) if (r - 1, c - 1) in right and (r, c) not in left:
+            case (row, col) if (row - 1, col - 1) in right and (row, col) not in left:
                 corners += 1
-            case (r, c) if (r - 1, c + 1) in left and (r, c) not in right:
+            case (row, col) if (row - 1, col + 1) in left and (row, col) not in right:
                 corners += 1
-            case (r, c) if (r, c) in down and (r, c) in left:
+            case (row, col) if (row, col) in down and (row, col) in left:
                 corners += 1
-            case (r, c) if (r, c) in down and (r, c) in right:
+            case (row, col) if (row, col) in down and (row, col) in right:
                 corners += 1
-            case (r, c) if (r + 1, c - 1) in right and (r, c) not in left:
+            case (row, col) if (row + 1, col - 1) in right and (row, col) not in left:
                 corners += 1
-            case (r, c) if (r + 1, c + 1) in left and (r, c) not in right:
+            case (row, col) if (row + 1, col + 1) in left and (row, col) not in right:
                 corners += 1
 
     return len(region), corners
