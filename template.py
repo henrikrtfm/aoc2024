@@ -1,4 +1,5 @@
 from utils.readinput import read_input_as_list
+from collections import defaultdict
 
 
 def parse_dayXX_input():
