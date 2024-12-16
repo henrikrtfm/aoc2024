@@ -54,3 +54,18 @@ def iterative_dfs(start, grid):
                 stack.append(neighbor)
 
     return visited
+
+
+def show(grid):
+    max_i = max([pos[0] for pos in grid.keys()])
+    max_j = max([pos[1] for pos in grid.keys()])
+
+    pic = [[None for h in range(max_j+1)] for w in range(max_i+1)]
+
+    for i, row in enumerate(pic):
+        for j, _ in enumerate(row):
+            pic[i][j] = grid[(i, j)]
+
+    for line in pic:
+        print(''.join(line))
+    print()
