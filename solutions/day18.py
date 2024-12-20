@@ -76,7 +76,6 @@ def solve_part_2(byte_list, memory_space):
     while low <= high:
         mid = (low + high) // 2
 
-        # Reset grid
         temp_space = memory_space.copy()
         for byte in byte_list[:mid]:
             temp_space[byte] = 1
