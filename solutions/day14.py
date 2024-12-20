@@ -13,7 +13,7 @@ MID_COLUMN = AREA.shape[1] // 2
 
 def parse_day14_input():
     #day14_input = read_input_as_list('input/day14_sample.txt')
-    day14_input = read_input_as_list('input/day14.txt')
+    day14_input = read_input_as_list('../input/day14.txt')
     robots = defaultdict(list)
     for line in day14_input:
         position = tuple(map(int, line.split()[0].split("=")[1].split(',')))

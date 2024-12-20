@@ -39,7 +39,7 @@ def apply_operator(a, op, b):
 
 def parse_day07_input():
     #day07_input = read_input_as_list('input/day07_sample.txt')
-    day07_input = read_input_as_list('input/day07.txt')
+    day07_input = read_input_as_list('../input/day07.txt')
     equations = []
     for line in day07_input:
         result_part, numbers_part = line.split(':')

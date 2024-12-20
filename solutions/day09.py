@@ -3,7 +3,7 @@ from utils.readinput import read_input
 
 def parse_day09_input():
     #day09_input = '2333133121414131402'
-    day09_input = read_input('input/day09.txt')
+    day09_input = read_input('../input/day09.txt')
     block_representation = []
     file_id = 0
     for i, char in enumerate(day09_input):

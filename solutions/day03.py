@@ -3,7 +3,7 @@ import re
 
 
 def parse_day03_input():
-    day03_input = read_input('input/day03.txt')
+    day03_input = read_input('../input/day03.txt')
     mul_pattern = r"mul\((\d{1,3}),(\d{1,3})\)"
     enabler_pattern = r"do\(\)|don't\(\)"
     parsed_mul_instructions = [((int(mul.group(1)), int(mul.group(2))), mul.start()) for mul in re.finditer(mul_pattern, day03_input)]

@@ -12,7 +12,7 @@ DIRECTIONS = {'^': (-1, 0), '>': (0, 1), '<': (0, -1), 'v': (1, 0)}
 
 def parse_day15_input():
     #day15_input = read_input('input/day15_sample.txt').split("\n\n")
-    day15_input = read_input('input/day15.txt').split("\n\n")
+    day15_input = read_input('../input/day15.txt').split("\n\n")
     raw_warehouse = day15_input[0].splitlines()
     moves = day15_input[1].replace('\n', '')
     warehouse = {}
@@ -29,7 +29,7 @@ def parse_day15_input():
 
 
 def parse_and_resize_day15_input():
-    day15_input = read_input('input/day15_sample.txt').split("\n\n")
+    day15_input = read_input('../input/day15_sample.txt').split("\n\n")
     #day15_input = read_input('input/day15.txt').split("\n\n")
     initial_warehouse = day15_input[0].splitlines()
     moves = day15_input[1].replace('\n', '')

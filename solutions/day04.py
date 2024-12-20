@@ -3,7 +3,7 @@ from utils.readinput import read_input_as_list
 
 def parse_day04_input():
     #day04_input = read_input_as_list('input/day04_sample.txt')
-    day04_input = read_input_as_list('input/day04.txt')
+    day04_input = read_input_as_list('../input/day04.txt')
     grid_dict = {}
     for row in range(len(day04_input)):
         for col in range(len(day04_input[0])):

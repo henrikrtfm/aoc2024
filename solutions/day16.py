@@ -24,7 +24,7 @@ POSSIBLE_DIRECTIONS = {
 
 def parse_day16_input():
     #day16_input = read_input_as_list('input/day16_sample.txt')
-    day16_input = read_input_as_list('input/day16.txt')
+    day16_input = read_input_as_list('../input/day16.txt')
     maze = {}
     start = None
     end = None

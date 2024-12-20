@@ -3,7 +3,7 @@ import itertools
 
 
 def parse_day01_input():
-    todays_input = read_input_as_list('input/day01.txt')
+    todays_input = read_input_as_list('../input/day01.txt')
     split_list = [x.split() for x in todays_input]
     instructions_1 = []
     instructions_2 = []

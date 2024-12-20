@@ -2,7 +2,7 @@ from utils.readinput import read_input_as_list
 
 
 def parse_day02_input():
-    day02_input = read_input_as_list('input/day02.txt')
+    day02_input = read_input_as_list('../input/day02.txt')
     day02_parsed = [list(map(int, line.split())) for line in day02_input]
     return day02_parsed
 

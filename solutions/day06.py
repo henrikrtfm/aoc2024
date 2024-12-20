@@ -13,7 +13,7 @@ LEFT = (0, -1)
 
 def parse_day06_input():
     #day06_input = read_input_as_list('input/day06_sample.txt')
-    day06_input = read_input_as_list('input/day06.txt')
+    day06_input = read_input_as_list('../input/day06.txt')
     grid = {}
     guard = None
     for i in range(len(day06_input)):

@@ -3,7 +3,7 @@ from utils.readinput import read_input
 
 def parse_day05_input():
     #day05_input = read_input('input/day05_sample.txt').split("\n\n")
-    day05_input = read_input('input/day05.txt').split("\n\n")
+    day05_input = read_input('../input/day05.txt').split("\n\n")
     raw_data = [line.splitlines() for line in day05_input]
     page_rules = {}
     for rule in raw_data[0]:

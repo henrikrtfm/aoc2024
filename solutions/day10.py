@@ -5,7 +5,7 @@ DIRECTIONS = [(-1, 0), (0, -1), (0, 1), (1, 0)]
 
 def parse_day10_input():
     #day10_input = read_input_as_list('input/day10_sample.txt')
-    day10_input = read_input_as_list('input/day10.txt')
+    day10_input = read_input_as_list('../input/day10.txt')
     topographic_map = {}
     trailheads = []
     for row in range(len(day10_input)):

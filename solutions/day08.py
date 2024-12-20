@@ -4,7 +4,7 @@ from itertools import permutations
 
 def parse_day08_input():
     #day08_input = read_input_as_list('input/day08_sample.txt')
-    day08_input = read_input_as_list('input/day08.txt')
+    day08_input = read_input_as_list('../input/day08.txt')
     grid = {}
     for i, row in enumerate(day08_input):
         for j, d in enumerate(row):

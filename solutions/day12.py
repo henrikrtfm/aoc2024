@@ -7,7 +7,7 @@ DIRECTIONS = [(-1, 0), (0, -1), (0, 1), (1, 0)]
 
 def parse_day12_input():
     #day12_input = read_input_as_list('input/day12_sample.txt')
-    day12_input = read_input_as_list('input/day12.txt')
+    day12_input = read_input_as_list('../input/day12.txt')
     garden_map = defaultdict()
     for row in range(len(day12_input)):
         for col in range(len(day12_input[0])):

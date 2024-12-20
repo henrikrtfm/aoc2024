@@ -23,7 +23,7 @@ def parse_values(line):
 
 def parse_day13_input():
     #day13_input = read_input('input/day13_sample.txt').split("\n\n")
-    day13_input = read_input('input/day13.txt').split("\n\n")
+    day13_input = read_input('../input/day13.txt').split("\n\n")
     claw_machines = []
 
     for block in day13_input:
