@@ -1,15 +1,17 @@
-def get_neighbors(grid_size, x, y):
-    coordinate = (x, y)
+def get_neighbors(coordinate, grid, cardinal):
 
-    # Neighbor directions
-    directions = [
-        (-1, -1), (-1, 0), (-1, 1),
-        (0, -1),          (0, 1),
-        (1, -1), (1, 0), (1, 1)
-    ]
-    # Calculate neighbors
+    if cardinal:
+        directions = [(-1, 0), (0, -1), (0, 1), (1, 0)]
+    else:
+        directions = [
+            (-1, -1), (-1, 0), (-1, 1),
+            (0, -1),          (0, 1),
+            (1, -1), (1, 0), (1, 1)
+        ]
+
+
     neighbors = [(coordinate[0] + dr, coordinate[1] + dc) for dr, dc in directions]
-    valid_coordinates = [(r, c) for r, c in neighbors if 0 <= r < grid_size and 0 <= c < grid_size]
+    valid_coordinates = [neighbor for neighbor in neighbors if neighbor in grid]
     return valid_coordinates
 
 
