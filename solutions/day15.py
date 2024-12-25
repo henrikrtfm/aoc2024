@@ -1,140 +1,158 @@
 from utils.readinput import read_input
 
+class Solution():
+    dirs = {
+        "^": (-1, 0),
+        "v": (1, 0),
+        "<": (0, -1),
+        ">": (0, 1),
+    }
 
-ROBOT = '@'
-WALL = '#'
-OBJECT = 'O'
-LEFT_BOX = '['
-RIGHT_BOX = ']'
-FLOOR = '.'
-DIRECTIONS = {'^': (-1, 0), '>': (0, 1), '<': (0, -1), 'v': (1, 0)}
+    def get_robot_pos(self, grid):
+        rows, cols = len(grid), len(grid[0])
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] == "@":
+                    return (i, j)
 
+    def moving(self, grid, pos, moves, part):
+        for move in moves:
+            """
+            # zip looks nice but way too slow
+            ny, nx = (a + b for a, b in zip(pos, self.dirs[move]))
+            """
+            ny = pos[0] + self.dirs[move][0]
+            nx = pos[1] + self.dirs[move][1]
 
-def parse_day15_input():
-    #day15_input = read_input('input/day15_sample.txt').split("\n\n")
-    day15_input = read_input('../input/day15.txt').split("\n\n")
-    raw_warehouse = day15_input[0].splitlines()
-    moves = day15_input[1].replace('\n', '')
-    warehouse = {}
-    robot = None
-    for row in range(len(raw_warehouse)):
-        for col in range(len(raw_warehouse[0])):
-            current = raw_warehouse[row][col]
-            if current == ROBOT:
-                robot = (row, col)
-                warehouse[(row, col)] = ROBOT
+            if grid[ny][nx] == ".":
+                pos = (ny, nx)
+            elif grid[ny][nx] == "#":
+                continue
             else:
-                warehouse[(row, col)] = current
-    return robot, warehouse, moves
+                edges, adjs = self.get_adjs_and_edges(grid, pos, move, part)
+                blocked = 0
+                dy, dx = self.dirs[move]
+                for box in edges:
+                    ny, nx = (box[0] + dy, box[1] + dx)
+                    if grid[ny][nx] == "#":
+                        blocked += 1
+                if blocked == 0:
+                    grid = self.update_grid(grid, adjs, move)
+                    pos = (pos[0] + dy, pos[1] + dx)
+        return grid
 
+    def get_adjs_and_edges(self, grid, pos, move, part=1):
+        y, x = pos
+        dy, dx = self.dirs[move]
 
-def parse_and_resize_day15_input():
-    day15_input = read_input('../input/day15_sample.txt').split("\n\n")
-    #day15_input = read_input('input/day15.txt').split("\n\n")
-    initial_warehouse = day15_input[0].splitlines()
-    moves = day15_input[1].replace('\n', '')
-    expanded_warehouse = []
-
-    for row in initial_warehouse:
-        row = row.replace('#', '##')
-        row = row.replace('O', '[]')
-        row = row.replace('.', '..')
-        row = row.replace('@', '@.')
-        expanded_warehouse.append(row)
-
-    warehouse = {}
-    robot = None
-    for row in range(len(expanded_warehouse)):
-        for col in range(len(expanded_warehouse[0])):
-            current = expanded_warehouse[row][col]
-            if current == ROBOT:
-                robot = (row, col)
-                warehouse[(row, col)] = ROBOT
-            else:
-                warehouse[(row, col)] = current
-    return robot, warehouse, moves
-
-
-def show(grid):
-    max_i = max([pos[0] for pos in grid.keys()])
-    max_j = max([pos[1] for pos in grid.keys()])
-
-    pic = [[None for h in range(max_j+1)] for w in range(max_i+1)]
-
-    for i, row in enumerate(pic):
-        for j, _ in enumerate(row):
-            pic[i][j] = grid[(i, j)]
-
-    for line in pic:
-        print(''.join(line))
-    print()
-
-
-def get_next(current, direction):
-    row, col = current
-    d_row, d_col = direction
-    return row+d_row, col+d_col
-
-
-def update_positions(positions, warehouse):
-    robot = (0, 0)
-    values = [warehouse[position] for position in positions]
-    rotated_values = [values[-1]] + values[:-1]
-    for position, new_value in zip(positions, rotated_values):
-        if new_value == ROBOT:
-            robot = position
-        warehouse[position] = new_value
-    return robot, warehouse
-
-
-def find_positions(start, move, warehouse):
-    positions = []
-    current = start
-    while True:
-        positions.append(current)
-        next_pos = get_next(current, DIRECTIONS[move])
-        value = warehouse[next_pos]
-        if value == WALL:
-            return []
-        elif value == FLOOR:
-            positions.append(next_pos)
-            break
-        elif value == OBJECT:
-            current = next_pos
+        adjs = set()
+        if part == 1 or move in "<>":
+            while True:
+                ny, nx = y + dy, x + dx
+                if grid[ny][nx] in ".#":
+                    return [(ny - dy, nx - dx)], adjs
+                y = ny
+                x = nx
+                adjs.add((y, x))
         else:
-            break
-    return positions
+            edges = []
+            queue = [(y, x)]
+            while queue:
+                y, x = queue.pop(0)
+                if (y, x) in adjs:
+                    continue
+                adjs.add((y, x))
+                ny, nx = y + dy, x + dx
+                if grid[ny][nx] in ".#":
+                    edges.append((y, x))
+                elif grid[ny][nx] == "[":
+                    queue.append((ny, nx))
+                    queue.append((ny, nx + 1))
+                elif grid[ny][nx] == "]":
+                    queue.append((ny, nx))
+                    queue.append((ny, nx - 1))
 
+            return edges, adjs - {(pos[0], pos[1])}
 
-def move_robot(robot, warehouse, moves):
-    for move in moves:
-        positions = find_positions(robot, move, warehouse)
-        if len(positions) != 0:
-            robot, warehouse = update_positions(positions, warehouse)
-    return warehouse
+    def update_grid(self, grid, adjs, move):
+        sorted_coords = []
 
+        # sort coords from the edge to the robot's position
+        match move:
+            case "^":
+                sorted_coords = sorted(adjs, key=lambda x: x[0])
+            case "v":
+                sorted_coords = sorted(adjs, key=lambda x: x[0], reverse=True)
+            case "<":
+                sorted_coords = sorted(adjs, key=lambda x: x[1])
+            case ">":
+                sorted_coords = sorted(adjs, key=lambda x: x[1], reverse=True)
 
-def calculate_gps(warehouse):
-    gps = []
-    for key, value in warehouse.items():
-        if value == OBJECT:
-            row, col = key
-            gps.append(100*row+col)
-    return gps
+        dy, dx = self.dirs[move]
+        for coord in sorted_coords:
+            y, x = coord
+            ny, nx = y + dy, x + dx
+            grid[ny][nx] = grid[y][x]
+            grid[y][x] = "."
 
+        return grid
 
-def solve_part_1(robot, warehouse, moves):
-    updated_warehouse = move_robot(robot, warehouse, moves)
-    return sum(calculate_gps(updated_warehouse))
+    def get_coords_sum(self, grid, part=1):
+        box = "[" if part == 2 else "O"
+        rows, cols = len(grid), len(grid[0])
+        # _sum = 0
+        # for r in range(rows):
+        #     for c in range(cols):
+        #         if grid[r][c] == target:
+        #             _sum += 100 * r + c
+        _sum = sum(100 * y + x for y in range(rows) for x in range(cols) if grid[y][x] == box)
+        return _sum
 
+    def resize_grid(self, grid):
+        _mappings = {
+            "#": "##",
+            "O": "[]",
+            ".": "..",
+            "@": "@.",
+        }
+        # new_grid = []
+        # for line in grid:
+        #     new_line = list("".join(_mappings[c] for c in line))
+        #     new_grid.append(new_line)
+        new_grid = [list("".join(_mappings[c] for c in line)) for line in grid]
+        return new_grid
 
-def solve_part_2(robot, warehouse, moves):
-    show(warehouse)
-    return 2
+    def part1(self, data):
+        part = 1
+        grid, moves = data.split("\n\n")
+        grid = [list(row) for row in grid.split("\n")]
+        moves = list("".join(moves.split("\n")))
+
+        pos = self.get_robot_pos(grid)
+        grid[pos[0]][pos[1]] = "."
+
+        grid = self.moving(grid, pos, moves, part)
+        _sum = self.get_coords_sum(grid, part)
+        return _sum
+
+    def part2(self, data):
+        part = 2
+        grid, moves = data.split("\n\n")
+        grid = [list(row) for row in grid.split("\n")]
+        moves = list("".join(moves.split("\n")))
+
+        grid = self.resize_grid(grid)
+
+        pos = self.get_robot_pos(grid)
+        grid[pos[0]][pos[1]] = "."
+
+        grid = self.moving(grid, pos, moves, part)
+        _sum = self.get_coords_sum(grid, part)
+        return _sum
 
 
 if __name__ == '__main__':
-    part1_input = parse_day15_input()
-    part2_input = parse_and_resize_day15_input()
-    print("Answer to part 1: {}".format(solve_part_1(part1_input[0], part1_input[1], part1_input[2])))
-    print("Answer to part 2: {}".format(solve_part_2(part2_input[0], part2_input[1], part2_input[2])))
+    solution = Solution()
+    day15_input = read_input('../input/day15.txt')
+    print("Answer to part 1: {}".format(solution.part1(day15_input)))
+    print("Answer to part 2: {}".format(solution.part2(day15_input)))
